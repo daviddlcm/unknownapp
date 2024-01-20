@@ -27,14 +27,15 @@ class Usuario{
     }
     static async getUsuarioById(id){
         const connection = await db.createConnection()
-        const [rows] = await connection.execute("SELECT id_usuario,nombre,correo,created_at,updated_at,deleted_at,deleted FROM usuarios WHERE id_usuario = ?",[id])
+        const [rows] = await connection.execute("SELECT id_usuario,nombre,password,correo,created_at,updated_at,deleted_at,deleted FROM usuarios WHERE id_usuario = ?",[id])
         connection.end()
         if(rows.length > 0){
             const row = rows[0]
             return new Usuario({
-                id:row.id_usuario,
+                id_usuario:row.id_usuario,
                 nombre:row.nombre,
                 correo:row.correo,
+                password:row.password,
                 createdAt:row.created_at,
                 updateAt:row.updated_at,
                 deletedAt:row.deleted_at,
@@ -50,7 +51,7 @@ class Usuario{
         if(rows.length > 0){
             const row = rows[0]
             return new Usuario({
-                id:row.id_usuario,
+                id_usuario:row.id_usuario,
                 nombre:row.nombre,
                 correo:row.correo,
                 password:row.password,
