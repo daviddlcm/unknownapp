@@ -23,5 +23,11 @@ class Publicacion{
         }
         this.id_publicacion = result.insertId
     }
+    static async getPublicaciones(){
+        const connection = await db.createConnection()
+        const [rows] = await connection.execute("SELECT id_publicacion,id_usuario,texto,created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,deleted FROM publicaciones WHERE deleted = 0")
+        connection.end()
+        return rows
+    }
 }
 module.exports = Publicacion

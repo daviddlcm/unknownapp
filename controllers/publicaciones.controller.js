@@ -1,4 +1,7 @@
 const Publicacion = require("../models/publicaciones.model")
+
+let responsesClientes = [];
+
 const postPublicaciones = async (req,res) => {
     try{
         const publicacion = new Publicacion({
@@ -7,6 +10,8 @@ const postPublicaciones = async (req,res) => {
             createdBy:req.user
         })
         await publicacion.save()
+        responderNotificacion(publicacion)
+
         return res.status(201).json({
             message:"publicacion guardada con exito",
             data:publicacion
@@ -19,6 +24,43 @@ const postPublicaciones = async (req,res) => {
     }
 }
 
+const getPublicaciones = async (req,res) => {
+    try{
+        const publicaciones = await Publicacion.getPublicaciones()
+        return res.status(200).json({
+            message:"publicaciones obtenidas con exito",
+            data:publicaciones
+        })
+    }catch(error){
+        return res.status(500).json({
+            message:"no se pudo obtener las publicaciones",
+            error:error.message
+        })
+    }
+}
+
+function responderNotificacion(notificacion) {
+    for (res of responsesClientes) {
+        res.status(200).json({
+            success: true,
+            notificacion
+        });
+    }
+
+    responsesClientes = [];
+}
+
+const getNuevasPublicaciones = (req, res) => {
+    responsesClientes.push(res);
+    // [res1, res2, res3]
+    req.on('close', () => {
+        const index = responsesClientes.length; 
+        responsesClientes = responsesClientes.slice(index, 1);
+    });
+}
+
 module.exports = {
-    postPublicaciones
+    postPublicaciones,
+    getPublicaciones,
+    getNuevasPublicaciones
 }
