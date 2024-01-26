@@ -11,10 +11,12 @@ app.use(cors())
 const usuariosRouter = require("./routes/usuarios.routes")
 const publicacionesRouter = require("./routes/publicaciones.routes")
 const likesRouter = require("./routes/likes.routes")
+const comentariosRouter = require("./routes/comentarios.routes")
 
 app.use("/usuarios",usuariosRouter)
 app.use("/publicaciones",publicacionesRouter)
 app.use("/likes",likesRouter)
+app.use("/comentarios",comentariosRouter)
 
 app.listen(PORT, () => {
     console.log("server listen on port "+PORT)
