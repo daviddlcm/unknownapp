@@ -28,6 +28,7 @@ const postUsuario = async (req,res) => {
 const getUsuarioById = async (req,res) => {
     try{
         const usuario = await Usuario.getUsuarioById(req.params.id)
+        
         if(!usuario){ 
         return res.status(404).json({
             message:"usuario no encontrado"
