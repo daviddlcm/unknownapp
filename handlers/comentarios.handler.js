@@ -11,11 +11,9 @@ module.exports = (io,socket) => {
             })
             publicacion.save()
 
-            io.emit("comentario:creado",publicacion)
-            socket.emit("comentario:creado",publicacion)
+            io.of("/unknown").emit("comentario:creado",publicacion)
+            //socket.emit("comentario:creado",publicacion)
             
-
-
         }catch(error){
             const data = {
                 message:"no se pudo guardar el comentario",
@@ -53,7 +51,7 @@ module.exports = (io,socket) => {
                 return
             }
             //socket.emit("comentario:verTodosDeUnaPublicacion_succes",{comentarios, idPublicacion: id})
-            io.emit("comentario:verTodosDeUnaPublicacion_succes",{comentarios, idPublicacion: id})
+            io.of("/unknown").emit("comentario:verTodosDeUnaPublicacion_succes",{comentarios, idPublicacion: id})
         }catch(error){
             const data = {
                 message:"no se pudo guardar el comentario",

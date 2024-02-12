@@ -28,7 +28,10 @@ const authMiddleware = require("./middlewares/socketio/auth.middleware")
 
 const registerCommentsHandler = require("./handlers/comentarios.handler")
 
+
+
 const onConnection = (socket) => {
+    console.log("new connection")
     registerCommentsHandler(io,socket)
 }
 io.of("/unknown").on("connection",onConnection).use(authMiddleware.verifyToken)

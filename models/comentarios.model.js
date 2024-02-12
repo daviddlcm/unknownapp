@@ -56,5 +56,11 @@ class Comentario{
         connection.end()
         return rows
     }
+    static async numberCommentsOfPublication(id){
+        const connection = await db.createConnection()
+        const [rows] = await connection.query("SELECT COUNT(id_comentarios) as number FROM comentarios WHERE id_publicacion = ?",[id])
+        connection.end()
+        return rows[0].number
+    }
 }
 module.exports = Comentario

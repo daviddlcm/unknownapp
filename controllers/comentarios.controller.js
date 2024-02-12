@@ -68,8 +68,26 @@ const getCommentsByPublicationById = async (req,res) => {
         })
     }
 }
+const numberOfCommentsOfPublication = async (req,res) => {
+    try{
+        const number = await Comentario.numberCommentsOfPublication(req.params.id)
+        return res.status(200).json({
+            message:"numero de comentarios",
+            data:number,
+            success:true
+        })
+    }catch(error){
+        return res.status(500).json({
+            message:"no se pudo ver los comentarios",
+            error:error.message,
+            success:false
+        })
+    }
+}
+
 module.exports = {
     addComment,
     getCommentByIdUnique,
-    getCommentsByPublicationById
+    getCommentsByPublicationById,
+    numberOfCommentsOfPublication
 }
