@@ -45,6 +45,26 @@ const getUsuarioById = async (req,res) => {
         })
     }
 }
+const getMe = async (req,res) => {
+    try{
+        const usuario = await Usuario.getUsuarioById(req.user)
+        
+        if(!usuario){ 
+        return res.status(404).json({
+            message:"usuario no encontrado"
+        })
+        }
+        return res.status(200).json({
+            message:"usuario encontrado",
+            usuario:usuario
+        })
+    }catch(error){
+        return res.status(500).json({
+            message:"no se puedo obtener el usuario",
+            error:error.message
+        })
+    }
+}
 
 const login = async (req,res) =>{
     try{
@@ -79,4 +99,5 @@ module.exports = {
     postUsuario,
     getUsuarioById,
     login,
+    getMe
 }

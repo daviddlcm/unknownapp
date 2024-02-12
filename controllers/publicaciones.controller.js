@@ -52,10 +52,12 @@ function responderNotificacion(notificacion) {
 
 const getNuevasPublicaciones = (req, res) => {
     responsesClientes.push(res);
-    // [res1, res2, res3]
     req.on('close', () => {
-        const index = responsesClientes.length; 
-        responsesClientes = responsesClientes.slice(index, 1);
+        const index = responsesClientes.indexOf(res);
+        if (index !== -1) {
+            responsesClientes.splice(index, 1);
+            res.end(); 
+        }
     });
 }
 

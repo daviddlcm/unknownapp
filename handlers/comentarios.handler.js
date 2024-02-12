@@ -11,8 +11,9 @@ module.exports = (io,socket) => {
             })
             publicacion.save()
 
-            socket.emit("comentario:creado",publicacion)
             io.emit("comentario:creado",publicacion)
+            socket.emit("comentario:creado",publicacion)
+            
 
 
         }catch(error){
@@ -41,9 +42,18 @@ module.exports = (io,socket) => {
     const getCommentsByPublicationById = async (id) => {
         try{
             const comentarios = await Comentario.getCommentsByPublication(id)
-    
-            socket.emit("comentario:verTodosDeUnaPublicacion_succes",comentarios)
-            //io.emit("comentario:verTodosDeUnaPublicacion_succes",comentarios)
+            //console.log(comentarios)
+            if(comentarios.length == 0){
+                const data = {
+                    message:"no hay comentarios",
+                    error:"no hay comentarios",
+                    idPublicacion: id
+                }
+                socket.emit("comentario:verTodosDeUnaPublicacion_error",data)
+                return
+            }
+            //socket.emit("comentario:verTodosDeUnaPublicacion_succes",{comentarios, idPublicacion: id})
+            io.emit("comentario:verTodosDeUnaPublicacion_succes",{comentarios, idPublicacion: id})
         }catch(error){
             const data = {
                 message:"no se pudo guardar el comentario",
@@ -52,7 +62,14 @@ module.exports = (io,socket) => {
             socket.emit("comentario:verTodosDeUnaPublicacion_error",data)
         }
     }
+
     socket.on("comentario:crear",addComment)
     // socket.on("comentario:verUnComenataro",getCommentByIdUnique)
     socket.on("comentario:verTodosDeUnaPublicacion",getCommentsByPublicationById)
+
+    socket.on("joinRoom",(idRoom,usuario) => {
+        socket.join(idRoom)
+        socket.emit("whoJoin",usuario,idRoom)
+    })
+    
 }

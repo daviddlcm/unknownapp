@@ -24,7 +24,6 @@ app.use(expres.json())
 app.use(cors())
 
 const authMiddleware = require("./middlewares/socketio/auth.middleware")
-io.use(authMiddleware.verifyToken)
 
 
 const registerCommentsHandler = require("./handlers/comentarios.handler")
@@ -32,8 +31,7 @@ const registerCommentsHandler = require("./handlers/comentarios.handler")
 const onConnection = (socket) => {
     registerCommentsHandler(io,socket)
 }
-
-io.on("connection",onConnection)
+io.of("/unknown").on("connection",onConnection).use(authMiddleware.verifyToken)
 
 
 const usuariosRouter = require("./routes/usuarios.routes")
